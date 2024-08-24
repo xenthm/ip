@@ -3,14 +3,14 @@ import java.util.Scanner;
 import java.util.ArrayList;
 
 public class Pat {
-    private static ArrayList<String> todoList = new ArrayList<>();
+    private static ArrayList<Task> todoList = new ArrayList<>();
 
     // ANSI escape code to change Pat's messages to pink
     public static final String PINK = "\033[95m";
     public static final String RESET = "\033[0m";
 
-    private static void say(String msg) {
-        System.out.println(PINK + msg + RESET);
+    private static void say(String message) {
+        System.out.println(PINK + message + RESET);
     }
 
     private static void greet() {
@@ -24,14 +24,14 @@ public class Pat {
     }
 
     private static void addToTodo(String task) {
-        todoList.add(task);
+        todoList.add(new Task(task));
         say("Added: " + task);
     }
 
     private static void printList() {
         say("Here's your todo list!");
         for (int i = 0; i < todoList.size(); i++) {
-            say((i + 1) + ". " + todoList.get(i));
+            say((i + 1) + "." + todoList.get(i).getTask());
         }
     }
 
@@ -48,11 +48,35 @@ public class Pat {
             }
             System.out.print("\033[F\033[1G\033[2K" + line + "\033[E");
 
-            if (line.equals("bye")) {
+            String[] splitLine = line.split(" ", 2);
+            switch (splitLine[0]) {
+            case "bye":
                 saidBye = true;
-            } else if (line.equals("list")) {
+                break;
+            case "list":
                 printList();
-            } else {
+                break;
+            case "mark":
+                try {
+                    Task task = todoList.get(Integer.parseInt(splitLine[1]) - 1);
+                    task.markDone();
+                    say("Nice! I've marked this task as done:");
+                    say(task.getTask());
+                } catch (NumberFormatException | IndexOutOfBoundsException e) {
+                    say("Please tell me a valid task to mark!");
+                }
+                break;
+            case "unmark":
+                try {
+                    Task task = todoList.get(Integer.parseInt(splitLine[1]) - 1);
+                    task.markNotDone();
+                    say("OK, I've marked this task as not done yet:");
+                    say(task.getTask());
+                } catch (NumberFormatException | IndexOutOfBoundsException e) {
+                    say("Please tell me a valid task to unmark!");
+                }
+                break;
+            default:
                 addToTodo(line);
             }
         } while (!saidBye);
