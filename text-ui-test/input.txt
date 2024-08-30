@@ -1,0 +1,12 @@
+test
+todo test
+list
+deadline test
+deadline test /by now
+event test /from    /to  2
+event test /from now /to later
+mark 2
+list
+unmark 2
+list
+bye
