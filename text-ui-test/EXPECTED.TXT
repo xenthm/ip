@@ -1,33 +1,33 @@
 [31m(Type "bye" to end the chat)[0m
-[95mHello! This is Pat!
-What can I do for you?[0m
-Type your message: [F[1G[2Ktest[E[95mPlease give me a valid command![0m
+[95mHello! This is Pat![0m
+[95mWhat can I do for you?[0m
+Type your message: [F[2Ktest[E[95mPlease give me a valid command![0m
 [95m[command] [arguments][0m
-Type your message: [F[1G[2Ktodo test[E[95mAdded this task: [0m
+Type your message: [F[2Ktodo test[E[95mAdded this task: [0m
 [95m    [T][ ] test[0m
 [95mNow you have 1 task in the list[0m
-Type your message: [F[1G[2Klist[E[95mHere's your todo list![0m
+Type your message: [F[2Klist[E[95mHere's your todo list![0m
 [95m    1.[T][ ] test[0m
-Type your message: [F[1G[2Kdeadline test[E[95mPlease give me a valid deadline to add![0m
+Type your message: [F[2Kdeadline test[E[95mPlease give me a valid deadline to add![0m
 [95mdeadline [task] /by [deadline][0m
-Type your message: [F[1G[2Kdeadline test /by now[E[95mAdded this task: [0m
+Type your message: [F[2Kdeadline test /by now[E[95mAdded this task: [0m
 [95m    [D][ ] test (by: now)[0m
 [95mNow you have 2 tasks in the list[0m
-Type your message: [F[1G[2Kevent test /from    /to  2[E[95mPlease give me a valid event to add![0m
+Type your message: [F[2Kevent test /from    /to  2[E[95mPlease give me a valid event to add![0m
 [95mevent [task] /from [start] /to [end][0m
-Type your message: [F[1G[2Kevent test /from now /to later[E[95mAdded this task: [0m
+Type your message: [F[2Kevent test /from now /to later[E[95mAdded this task: [0m
 [95m    [E][ ] test (from: now to: later)[0m
 [95mNow you have 3 tasks in the list[0m
-Type your message: [F[1G[2Kmark 2[E[95mNice! I've marked this task as done:[0m
+Type your message: [F[2Kmark 2[E[95mNice! I've marked this task as done:[0m
 [95m[D][X] test (by: now)[0m
-Type your message: [F[1G[2Klist[E[95mHere's your todo list![0m
+Type your message: [F[2Klist[E[95mHere's your todo list![0m
 [95m    1.[T][ ] test[0m
 [95m    2.[D][X] test (by: now)[0m
 [95m    3.[E][ ] test (from: now to: later)[0m
-Type your message: [F[1G[2Kunmark 2[E[95mOK, I've marked this task as not done yet:[0m
+Type your message: [F[2Kunmark 2[E[95mOK, I've marked this task as not done yet:[0m
 [95m[D][ ] test (by: now)[0m
-Type your message: [F[1G[2Klist[E[95mHere's your todo list![0m
+Type your message: [F[2Klist[E[95mHere's your todo list![0m
 [95m    1.[T][ ] test[0m
 [95m    2.[D][ ] test (by: now)[0m
 [95m    3.[E][ ] test (from: now to: later)[0m
-Type your message: [F[1G[2Kbye[E[95mBye! Remember, this is Pat![0m
+Type your message: [F[2Kbye[E[95mBye! Remember, this is Pat![0m
