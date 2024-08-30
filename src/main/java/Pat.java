@@ -2,23 +2,24 @@ import java.util.Scanner;
 import java.util.ArrayList;
 
 public class Pat {
-    private static ArrayList<Task> todoList = new ArrayList<>();
-
-    // ANSI escape code to change chat colours
-    public static final String RED = "\033[31m";
-    public static final String PINK = "\033[95m";
-    public static final String RESET = "\033[0m";
-
+    // ANSI escape codes to change format chat
+    public static final String ANSI_RED = "\033[31m";
+    public static final String ANSI_PINK = "\033[95m";
+    public static final String ANSI_RESET = "\033[0m";
+    public static final String ANSI_ERASE_LINE = "\033[2K";
+    public static final String ANSI_MOVE_TO_START_OF_PREVIOUS_LINE = "\033[F";
     public static final String INDENT = "    ";
 
+    private static final ArrayList<Task> todoList = new ArrayList<>();
+
     private static void say(String message) {
-        System.out.println(PINK + message + RESET);
+        System.out.println(ANSI_PINK + message + ANSI_RESET);
     }
 
     private static void greet() {
-        say("""
-                Hello! This is Pat!
-                What can I do for you?""");
+        System.out.println(ANSI_RED + "(Type \"bye\" to end the chat)" + ANSI_RESET);
+        say("Hello! This is Pat!");
+        say("What can I do for you?");
     }
 
     private static void bye() {
@@ -44,6 +45,81 @@ public class Pat {
         }
     }
 
+    private static void markTask(String arg) {
+        try {
+            Task task = todoList.get(Integer.parseInt(arg) - 1);
+            task.markDone();
+            say("Nice! I've marked this task as done:");
+            say(task.getTask());
+        } catch (NumberFormatException | IndexOutOfBoundsException e) {
+            say("Please tell me a valid task to mark!");
+            say("mark [task number from list]");
+        }
+    }
+
+    private static void unmarkTask(String arg) {
+        try {
+            Task task = todoList.get(Integer.parseInt(arg) - 1);
+            task.markNotDone();
+            say("OK, I've marked this task as not done yet:");
+            say(task.getTask());
+        } catch (NumberFormatException | IndexOutOfBoundsException e) {
+            say("Please tell me a valid task to unmark!");
+            say("unmark [task number from list]");
+        }
+    }
+
+    private static void handleTodo(String arg) {
+        try {
+            String todo = arg.trim();
+            if (todo.isEmpty()) {
+                throw new IllegalArgumentException("Empty todo");
+            }
+            addToTodo(new Todo(todo));
+        } catch (IllegalArgumentException | IndexOutOfBoundsException e) {
+            say("Please give me a valid todo to add!");
+            say("todo [task]");
+        }
+    }
+
+    private static void handleDeadline(String arg) {
+        try {
+            String[] splitLineBy = arg.split(" /by ", 2);
+            String deadline = splitLineBy[0].trim();
+            String by = splitLineBy[1].trim();
+            if (deadline.isEmpty()) {
+                throw new IllegalArgumentException("Empty deadline");
+            } else if (by.isEmpty()) {
+                throw new IllegalArgumentException("Empty by");
+            }
+            addToTodo(new Deadline(deadline, by));
+        } catch (IllegalArgumentException | IndexOutOfBoundsException e) {
+            say("Please give me a valid deadline to add!");
+            say("deadline [task] /by [deadline]");
+        }
+    }
+
+    private static void handleEvent(String arg) {
+        try {
+            String[] splitLineFrom = arg.split(" /from ", 2);
+            String event = splitLineFrom[0].trim();
+            String[] splitLineTo = splitLineFrom[1].split(" /to ", 2);
+            String from = splitLineTo[0].trim();
+            String to = splitLineTo[1].trim();
+            if (event.isEmpty()) {
+                throw new IllegalArgumentException("Empty event");
+            } else if (from.isEmpty()) {
+                throw new IllegalArgumentException("Empty from");
+            } else if (to.isEmpty()) {
+                throw new IllegalArgumentException("Empty to");
+            }
+            addToTodo(new Event(event, from, to));
+        } catch (IllegalArgumentException | IndexOutOfBoundsException e) {
+            say("Please give me a valid event to add!");
+            say("event [task] /from [start] /to [end]");
+        }
+    }
+
     private static void runChat() {
         String line;
         Scanner in = new Scanner(System.in);
@@ -52,10 +128,10 @@ public class Pat {
             System.out.print("Type your message: ");
             line = in.nextLine();
             if (line.trim().isEmpty()) {
-                System.out.print("\033[F");
+                System.out.print(ANSI_MOVE_TO_START_OF_PREVIOUS_LINE);
                 continue;
             }
-            System.out.print("\033[F\033[1G\033[2K" + line + "\033[E");
+            System.out.print(ANSI_MOVE_TO_START_OF_PREVIOUS_LINE + ANSI_ERASE_LINE + line + "\033[E");
 
             String[] splitLine = line.split(" ", 2);
             String command = splitLine[0];
@@ -67,74 +143,19 @@ public class Pat {
                 printList();
                 break;
             case "mark":
-                try {
-                    Task task = todoList.get(Integer.parseInt(splitLine[1]) - 1);
-                    task.markDone();
-                    say("Nice! I've marked this task as done:");
-                    say(task.getTask());
-                } catch (NumberFormatException | IndexOutOfBoundsException e) {
-                    say("Please tell me a valid task to mark!");
-                    say("mark [task number from list]");
-                }
+                markTask(splitLine[1]);
                 break;
             case "unmark":
-                try {
-                    Task task = todoList.get(Integer.parseInt(splitLine[1]) - 1);
-                    task.markNotDone();
-                    say("OK, I've marked this task as not done yet:");
-                    say(task.getTask());
-                } catch (NumberFormatException | IndexOutOfBoundsException e) {
-                    say("Please tell me a valid task to unmark!");
-                    say("unmark [task number from list]");
-                }
+                unmarkTask(splitLine[1]);
                 break;
             case "todo":
-                try {
-                    String todo = splitLine[1].trim();
-                    if (todo.isEmpty()) {
-                        throw new IllegalArgumentException("Empty todo");
-                    }
-                    addToTodo(new Todo(todo));
-                } catch (IllegalArgumentException | IndexOutOfBoundsException e) {
-                    say("Please give me a valid todo to add!");
-                    say("todo [task]");
-                }
+                handleTodo(splitLine[1]);
                 break;
             case "deadline":
-                try {
-                    String[] splitLineBy = splitLine[1].split(" /by ", 2);
-                    String deadline = splitLineBy[0].trim();
-                    String by = splitLineBy[1].trim();
-                    if (deadline.isEmpty()) {
-                        throw new IllegalArgumentException("Empty deadline");
-                    } else if (by.isEmpty()) {
-                        throw new IllegalArgumentException("Empty by");
-                    }
-                    addToTodo(new Deadline(deadline, by));
-                } catch (IllegalArgumentException | IndexOutOfBoundsException e) {
-                    say("Please give me a valid deadline to add!");
-                    say("deadline [task] /by [deadline]");
-                }
+                handleDeadline(splitLine[1]);
                 break;
             case "event":
-                try {
-                    String[] splitLineFrom = splitLine[1].split(" /from ", 2);
-                    String event = splitLineFrom[0].trim();
-                    String[] splitLineTo = splitLineFrom[1].split(" /to ", 2);
-                    String from = splitLineTo[0].trim();
-                    String to = splitLineTo[1].trim();
-                    if (event.isEmpty()) {
-                        throw new IllegalArgumentException("Empty event");
-                    } else if (from.isEmpty()) {
-                        throw new IllegalArgumentException("Empty from");
-                    } else if (to.isEmpty()) {
-                        throw new IllegalArgumentException("Empty to");
-                    }
-                    addToTodo(new Event(event, from, to));
-                } catch (IllegalArgumentException | IndexOutOfBoundsException e) {
-                    say("Please give me a valid event to add!");
-                    say("event [task] /from [start] /to [end]");
-                }
+                handleEvent(splitLine[1]);
                 break;
             default:
                 say("Please give me a valid command!");
@@ -144,7 +165,6 @@ public class Pat {
     }
 
     public static void main(String[] args) {
-        System.out.println(RED + "(Type \"bye\" to end the chat)" + RESET);
         greet();
         runChat();
         bye();
