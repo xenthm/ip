@@ -5,9 +5,12 @@ import java.util.ArrayList;
 public class Pat {
     private static ArrayList<Task> todoList = new ArrayList<>();
 
-    // ANSI escape code to change Pat's messages to pink
+    // ANSI escape code to change chat colours
+    public static final String RED = "\033[31m";
     public static final String PINK = "\033[95m";
     public static final String RESET = "\033[0m";
+
+    public static final String INDENT = "    ";
 
     private static void say(String message) {
         System.out.println(PINK + message + RESET);
@@ -23,15 +26,22 @@ public class Pat {
         say("Bye! Remember, this is Pat!");
     }
 
-    private static void addToTodo(String task) {
-        todoList.add(new Task(task));
-        say("Added: " + task);
+    private static void addToTodo(Task task) {
+        todoList.add(task);
+        say("Added this task: ");
+        say(INDENT + task.getTask());
+        int size = todoList.size();
+        say("Now you have " + size + (size == 1 ? " task" : " tasks") + " in the list");
     }
 
     private static void printList() {
+        if (todoList.isEmpty()) {
+            say("Your todo list is empty!");
+            return;
+        }
         say("Here's your todo list!");
         for (int i = 0; i < todoList.size(); i++) {
-            say((i + 1) + "." + todoList.get(i).getTask());
+            say(INDENT + (i + 1) + "." + todoList.get(i).getTask());
         }
     }
 
@@ -49,7 +59,8 @@ public class Pat {
             System.out.print("\033[F\033[1G\033[2K" + line + "\033[E");
 
             String[] splitLine = line.split(" ", 2);
-            switch (splitLine[0]) {
+            String command = splitLine[0];
+            switch (command) {
             case "bye":
                 saidBye = true;
                 break;
@@ -83,7 +94,7 @@ public class Pat {
     }
 
     public static void main(String[] args) {
-        System.out.println("(Type \"bye\" to end the chat)");
+        System.out.println(RED + "(Type \"bye\" to end the chat)" + RESET);
         greet();
         runChat();
         bye();
