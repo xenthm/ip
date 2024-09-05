@@ -99,10 +99,10 @@ public class Pat {
         try {
             String todo = commandArgsPair[1].trim();
             if (todo.isEmpty()) {
-                throw new IllegalArgumentException("Empty todo");
+                throw new InvalidCommandException();
             }
             addToList(new Todo(todo));
-        } catch (IllegalArgumentException e) {
+        } catch (InvalidCommandException | IndexOutOfBoundsException e) {
             sayln("Please give me a valid todo to add!");
             sayln("todo [task]");
         }
@@ -114,13 +114,16 @@ public class Pat {
             String deadline = deadlineByPair[0].trim();
             String by = deadlineByPair[1].trim();
             if (deadline.isEmpty()) {
-                throw new IllegalArgumentException("Empty deadline");
+                throw new InvalidCommandException();
             } else if (by.isEmpty()) {
-                throw new IllegalArgumentException("Empty by");
+                throw new EmptyDateException("By");
             }
             addToList(new Deadline(deadline, by));
-        } catch (IllegalArgumentException e) {
+        } catch (InvalidCommandException | IndexOutOfBoundsException e) {
             sayln("Please give me a valid deadline to add!");
+            sayln("deadline [task] /by [deadline]");
+        } catch (EmptyDateException e) {
+            sayln("Please give me a valid due date/time");
             sayln("deadline [task] /by [deadline]");
         }
     }
@@ -133,15 +136,18 @@ public class Pat {
             String from = fromToPair[0].trim();
             String to = fromToPair[1].trim();
             if (event.isEmpty()) {
-                throw new IllegalArgumentException("Empty event");
+                throw new InvalidCommandException();
             } else if (from.isEmpty()) {
-                throw new IllegalArgumentException("Empty from");
+                throw new EmptyDateException("Empty from");
             } else if (to.isEmpty()) {
-                throw new IllegalArgumentException("Empty to");
+                throw new EmptyDateException("Empty to");
             }
             addToList(new Event(event, from, to));
-        } catch (IllegalArgumentException e) {
+        } catch (InvalidCommandException | IndexOutOfBoundsException e) {
             sayln("Please give me a valid event to add!");
+            sayln("event [task] /from [start] /to [end]");
+        } catch (EmptyDateException e) {
+            sayln("Please give me a valid start and end date/time");
             sayln("event [task] /from [start] /to [end]");
         }
     }
@@ -169,12 +175,6 @@ public class Pat {
             case "list":
                 printList();
                 break;
-            case "mark":
-                markTask(commandArgsPair);
-                break;
-            case "unmark":
-                unmarkTask(commandArgsPair);
-                break;
             case "todo":
                 handleTodo(commandArgsPair);
                 break;
@@ -184,9 +184,15 @@ public class Pat {
             case "event":
                 handleEvent(commandArgsPair);
                 break;
+            case "mark":
+                markTask(commandArgsPair);
+                break;
+            case "unmark":
+                unmarkTask(commandArgsPair);
+                break;
             default:
                 sayln("Please give me a valid command!");
-                sayln("[todo/deadline/event] [arguments]");
+                sayln("[bye/list/todo/deadline/event/mark/unmark]");
             }
         } while (!saidBye);
     }
