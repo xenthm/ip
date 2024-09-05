@@ -8,6 +8,7 @@ public class Pat {
     public static final String ANSI_RESET = "\033[0m";
     public static final String ANSI_ERASE_LINE = "\033[2K";
     public static final String ANSI_MOVE_TO_START_OF_PREVIOUS_LINE = "\033[F";
+    public static final String ANSI_MOVE_TO_START_OF_NEXT_LINE = "\033[E";
     public static final String INDENT = "    ";
 
     private static final ArrayList<Task> todoList = new ArrayList<>();
@@ -126,12 +127,12 @@ public class Pat {
         boolean saidBye = false;
         do {
             System.out.print("Type your message: ");
-            line = in.nextLine();
-            if (line.trim().isEmpty()) {
+            line = in.nextLine().trim();
+            if (line.isEmpty()) {
                 System.out.print(ANSI_MOVE_TO_START_OF_PREVIOUS_LINE);
                 continue;
             }
-            System.out.print(ANSI_MOVE_TO_START_OF_PREVIOUS_LINE + ANSI_ERASE_LINE + line + "\033[E");
+            System.out.print(ANSI_MOVE_TO_START_OF_PREVIOUS_LINE + ANSI_ERASE_LINE + line + ANSI_MOVE_TO_START_OF_NEXT_LINE);
 
             String[] splitLine = line.split(" ", 2);
             String command = splitLine[0];
