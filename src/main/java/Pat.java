@@ -52,7 +52,7 @@ public class Pat {
             task.markDone();
             say("Nice! I've marked this task as done:");
             say(task.getTask());
-        } catch (NumberFormatException | IndexOutOfBoundsException e) {
+        } catch (NumberFormatException e) {
             say("Please tell me a valid task to mark!");
             say("mark [task number from list]");
         }
@@ -64,7 +64,7 @@ public class Pat {
             task.markNotDone();
             say("OK, I've marked this task as not done yet:");
             say(task.getTask());
-        } catch (NumberFormatException | IndexOutOfBoundsException e) {
+        } catch (NumberFormatException e) {
             say("Please tell me a valid task to unmark!");
             say("unmark [task number from list]");
         }
@@ -72,12 +72,11 @@ public class Pat {
 
     private static void handleTodo(String arg) {
         try {
-            String todo = arg.trim();
-            if (todo.isEmpty()) {
+            if (arg.isEmpty()) {
                 throw new IllegalArgumentException("Empty todo");
             }
-            addToTodo(new Todo(todo));
-        } catch (IllegalArgumentException | IndexOutOfBoundsException e) {
+            addToTodo(new Todo(arg));
+        } catch (IllegalArgumentException e) {
             say("Please give me a valid todo to add!");
             say("todo [task]");
         }
@@ -94,7 +93,7 @@ public class Pat {
                 throw new IllegalArgumentException("Empty by");
             }
             addToTodo(new Deadline(deadline, by));
-        } catch (IllegalArgumentException | IndexOutOfBoundsException e) {
+        } catch (IllegalArgumentException e) {
             say("Please give me a valid deadline to add!");
             say("deadline [task] /by [deadline]");
         }
@@ -115,7 +114,7 @@ public class Pat {
                 throw new IllegalArgumentException("Empty to");
             }
             addToTodo(new Event(event, from, to));
-        } catch (IllegalArgumentException | IndexOutOfBoundsException e) {
+        } catch (IllegalArgumentException e) {
             say("Please give me a valid event to add!");
             say("event [task] /from [start] /to [end]");
         }
@@ -126,7 +125,7 @@ public class Pat {
         Scanner in = new Scanner(System.in);
         boolean saidBye = false;
         do {
-            System.out.print("Type your message: ");
+            System.out.print("Type your command: ");
             line = in.nextLine().trim();
             if (line.isEmpty()) {
                 System.out.print(ANSI_MOVE_TO_START_OF_PREVIOUS_LINE);
@@ -136,31 +135,36 @@ public class Pat {
 
             String[] splitLine = line.split(" ", 2);
             String command = splitLine[0];
-            switch (command) {
-            case "bye":
-                saidBye = true;
-                break;
-            case "list":
-                printList();
-                break;
-            case "mark":
-                markTask(splitLine[1]);
-                break;
-            case "unmark":
-                unmarkTask(splitLine[1]);
-                break;
-            case "todo":
-                handleTodo(splitLine[1]);
-                break;
-            case "deadline":
-                handleDeadline(splitLine[1]);
-                break;
-            case "event":
-                handleEvent(splitLine[1]);
-                break;
-            default:
-                say("Please give me a valid command!");
-                say("[command] [arguments]");
+            try {
+                switch (command) {
+                case "bye":
+                    saidBye = true;
+                    break;
+                case "list":
+                    printList();
+                    break;
+                case "mark":
+                    markTask(splitLine[1]);
+                    break;
+                case "unmark":
+                    unmarkTask(splitLine[1]);
+                    break;
+                case "todo":
+                    handleTodo(splitLine[1]);
+                    break;
+                case "deadline":
+                    handleDeadline(splitLine[1]);
+                    break;
+                case "event":
+                    handleEvent(splitLine[1]);
+                    break;
+                default:
+                    say("Please give me a valid command!");
+                    say("[todo/deadline/event] [arguments]");
+                }
+            } catch (IndexOutOfBoundsException e) {
+                say("Please provide an argument after the command!");
+                say("[todo/deadline/event] [arguments]");
             }
         } while (!saidBye);
     }
