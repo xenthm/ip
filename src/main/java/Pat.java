@@ -14,98 +14,124 @@ public class Pat {
     private static final ArrayList<Task> todoList = new ArrayList<>();
 
     private static void say(String message) {
+        System.out.print(ANSI_PINK + message + ANSI_RESET);
+    }
+
+    private static void sayln(String message) {
         System.out.println(ANSI_PINK + message + ANSI_RESET);
     }
 
     private static void greet() {
         System.out.println(ANSI_RED + "(Type \"bye\" to end the chat)" + ANSI_RESET);
-        say("Hello! This is Pat!");
-        say("What can I do for you?");
+        sayln("Hello! This is Pat!");
+        sayln("What can I do for you?");
     }
 
     private static void bye() {
-        say("Bye! Remember, this is Pat!");
+        sayln("Bye! Remember, this is Pat!");
     }
 
-    private static void addToTodo(Task task) {
+    private static void addToList(Task task) {
         todoList.add(task);
-        say("Added this task: ");
-        say(INDENT + task.getTask());
+        sayln("Added this task: ");
+        sayln(INDENT + task.getTask());
         int size = todoList.size();
-        say("Now you have " + size + (size == 1 ? " task" : " tasks") + " in the list");
+        sayln("Now you have " + size + (size == 1 ? " task" : " tasks") + " in the list");
     }
 
     private static void printList() {
         if (todoList.isEmpty()) {
-            say("Your todo list is empty!");
+            sayln("Your todo list is empty!");
             return;
         }
-        say("Here's your todo list!");
+        sayln("Here's your todo list!");
         for (int i = 0; i < todoList.size(); i++) {
-            say(INDENT + (i + 1) + "." + todoList.get(i).getTask());
+            sayln(INDENT + (i + 1) + "." + todoList.get(i).getTask());
         }
     }
 
-    private static void markTask(String arg) {
+    // todo: combine the following 2 methods into 1 by defining another parameter that takes in "mark" or "unmark"
+    private static void markTask(String[] commandArgsPair) {
+        if (todoList.isEmpty()) {
+            sayln("Your todo list is empty, please add a task before marking!");
+            return;
+        }
         try {
-            Task task = todoList.get(Integer.parseInt(arg) - 1);
+            int taskNumber = Integer.parseInt(commandArgsPair[1]);
+            Task task = todoList.get(taskNumber - 1);
             task.markDone();
-            say("Nice! I've marked this task as done:");
-            say(task.getTask());
+            sayln("Nice! I've marked this task as done:");
+            sayln(task.getTask());
         } catch (NumberFormatException e) {
-            say("Please tell me a valid task to mark!");
-            say("mark [task number from list]");
+            sayln("Please tell me a valid task number to mark!");
+            sayln("Run `list` to see all available tasks.");
+            sayln("mark [task number from list]");
+        } catch (IndexOutOfBoundsException e) {
+            sayln("Task does not exist!");
+            say("Please provide a task number from 1 to ");
+            sayln(String.valueOf(todoList.size()));
         }
     }
 
-    private static void unmarkTask(String arg) {
+    private static void unmarkTask(String[] commandArgsPair) {
+        if (todoList.isEmpty()) {
+            sayln("Your todo list is empty, please add a task before unmarking!");
+            return;
+        }
         try {
-            Task task = todoList.get(Integer.parseInt(arg) - 1);
+            int taskNumber = Integer.parseInt(commandArgsPair[1]);
+            Task task = todoList.get(taskNumber - 1);
             task.markNotDone();
-            say("OK, I've marked this task as not done yet:");
-            say(task.getTask());
+            sayln("OK, I've marked this task as not done yet:");
+            sayln(task.getTask());
         } catch (NumberFormatException e) {
-            say("Please tell me a valid task to unmark!");
-            say("unmark [task number from list]");
+            sayln("Please tell me a valid task number to unmark!");
+            sayln("Run `list` to see all available tasks.");
+            sayln("mark [task number from list]");
+        } catch (IndexOutOfBoundsException e) {
+            sayln("Task does not exist!");
+            say("Please provide a task number from 1 to ");
+            sayln(String.valueOf(todoList.size()));
         }
     }
 
-    private static void handleTodo(String arg) {
+    private static void handleTodo(String[] commandArgsPair) {
         try {
-            if (arg.isEmpty()) {
+            String todo = commandArgsPair[1].trim();
+            if (todo.isEmpty()) {
                 throw new IllegalArgumentException("Empty todo");
             }
-            addToTodo(new Todo(arg));
+            addToList(new Todo(todo));
         } catch (IllegalArgumentException e) {
-            say("Please give me a valid todo to add!");
-            say("todo [task]");
+            sayln("Please give me a valid todo to add!");
+            sayln("todo [task]");
         }
     }
 
-    private static void handleDeadline(String arg) {
+    private static void handleDeadline(String[] commandArgsPair) {
         try {
-            String[] splitLineBy = arg.split(" /by ", 2);
-            String deadline = splitLineBy[0].trim();
-            String by = splitLineBy[1].trim();
+            String[] deadlineByPair = commandArgsPair[1].split("/by", 2);
+            String deadline = deadlineByPair[0].trim();
+            String by = deadlineByPair[1].trim();
             if (deadline.isEmpty()) {
                 throw new IllegalArgumentException("Empty deadline");
             } else if (by.isEmpty()) {
                 throw new IllegalArgumentException("Empty by");
             }
-            addToTodo(new Deadline(deadline, by));
+            addToList(new Deadline(deadline, by));
         } catch (IllegalArgumentException e) {
-            say("Please give me a valid deadline to add!");
-            say("deadline [task] /by [deadline]");
+            sayln("Please give me a valid deadline to add!");
+            sayln("deadline [task] /by [deadline]");
         }
     }
 
-    private static void handleEvent(String arg) {
+    private static void handleEvent(String[] commandArgsPair) {
         try {
-            String[] splitLineFrom = arg.split(" /from ", 2);
-            String event = splitLineFrom[0].trim();
-            String[] splitLineTo = splitLineFrom[1].split(" /to ", 2);
-            String from = splitLineTo[0].trim();
-            String to = splitLineTo[1].trim();
+            String[] eventArgsPair = commandArgsPair[1].split("/from", 2);
+            String event = eventArgsPair[0].trim();
+            String[] fromToPair = eventArgsPair[1].split("/to", 2);
+            String from = fromToPair[0].trim();
+            String to = fromToPair[1].trim();
             if (event.isEmpty()) {
                 throw new IllegalArgumentException("Empty event");
             } else if (from.isEmpty()) {
@@ -113,10 +139,10 @@ public class Pat {
             } else if (to.isEmpty()) {
                 throw new IllegalArgumentException("Empty to");
             }
-            addToTodo(new Event(event, from, to));
+            addToList(new Event(event, from, to));
         } catch (IllegalArgumentException e) {
-            say("Please give me a valid event to add!");
-            say("event [task] /from [start] /to [end]");
+            sayln("Please give me a valid event to add!");
+            sayln("event [task] /from [start] /to [end]");
         }
     }
 
@@ -131,40 +157,36 @@ public class Pat {
                 System.out.print(ANSI_MOVE_TO_START_OF_PREVIOUS_LINE);
                 continue;
             }
-            System.out.print(ANSI_MOVE_TO_START_OF_PREVIOUS_LINE + ANSI_ERASE_LINE + line + ANSI_MOVE_TO_START_OF_NEXT_LINE);
+            System.out.print(ANSI_MOVE_TO_START_OF_PREVIOUS_LINE + ANSI_ERASE_LINE + line
+                    + ANSI_MOVE_TO_START_OF_NEXT_LINE);
 
-            String[] splitLine = line.split(" ", 2);
-            String command = splitLine[0];
-            try {
-                switch (command) {
-                case "bye":
-                    saidBye = true;
-                    break;
-                case "list":
-                    printList();
-                    break;
-                case "mark":
-                    markTask(splitLine[1]);
-                    break;
-                case "unmark":
-                    unmarkTask(splitLine[1]);
-                    break;
-                case "todo":
-                    handleTodo(splitLine[1]);
-                    break;
-                case "deadline":
-                    handleDeadline(splitLine[1]);
-                    break;
-                case "event":
-                    handleEvent(splitLine[1]);
-                    break;
-                default:
-                    say("Please give me a valid command!");
-                    say("[todo/deadline/event] [arguments]");
-                }
-            } catch (IndexOutOfBoundsException e) {
-                say("Please provide an argument after the command!");
-                say("[todo/deadline/event] [arguments]");
+            String[] commandArgsPair = line.split(" ", 2);
+            String command = commandArgsPair[0];
+            switch (command) {
+            case "bye":
+                saidBye = true;
+                break;
+            case "list":
+                printList();
+                break;
+            case "mark":
+                markTask(commandArgsPair);
+                break;
+            case "unmark":
+                unmarkTask(commandArgsPair);
+                break;
+            case "todo":
+                handleTodo(commandArgsPair);
+                break;
+            case "deadline":
+                handleDeadline(commandArgsPair);
+                break;
+            case "event":
+                handleEvent(commandArgsPair);
+                break;
+            default:
+                sayln("Please give me a valid command!");
+                sayln("[todo/deadline/event] [arguments]");
             }
         } while (!saidBye);
     }
