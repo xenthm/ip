@@ -1,6 +1,14 @@
 import java.util.Scanner;
 import java.util.ArrayList;
 
+import types.Deadline;
+import types.Event;
+import types.Task;
+import types.Todo;
+
+import exceptions.EmptyDateException;
+import exceptions.InvalidCommandException;
+
 public class Pat {
     // ANSI escape codes to change format chat
     public static final String ANSI_RED = "\033[31m";
@@ -67,7 +75,7 @@ public class Pat {
             sayln("Run `list` to see all available tasks.");
             sayln("mark [task number from list]");
         } catch (IndexOutOfBoundsException e) {
-            sayln("Task does not exist!");
+            sayln("types.Task does not exist!");
             say("Please provide a task number from 1 to ");
             sayln(String.valueOf(todoList.size()));
         }
@@ -89,7 +97,7 @@ public class Pat {
             sayln("Run `list` to see all available tasks.");
             sayln("mark [task number from list]");
         } catch (IndexOutOfBoundsException e) {
-            sayln("Task does not exist!");
+            sayln("types.Task does not exist!");
             say("Please provide a task number from 1 to ");
             sayln(String.valueOf(todoList.size()));
         }
