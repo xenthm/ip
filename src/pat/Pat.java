@@ -97,7 +97,7 @@ public class Pat {
             sayln("Run `list` to see all available tasks.");
             sayln("mark [task number from list]");
         } catch (IndexOutOfBoundsException e) {
-            sayln("types.Task does not exist!");
+            sayln("Task does not exist!");
             say("Please provide a task number from 1 to ");
             sayln(String.valueOf(todoList.size()));
         }
