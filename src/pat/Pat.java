@@ -95,9 +95,36 @@ public class Pat {
         } catch (NumberFormatException e) {
             sayln("Please tell me a valid task number to unmark!");
             sayln("Run `list` to see all available tasks.");
-            sayln("mark [task number from list]");
+            sayln("unmark [task number from list]");
         } catch (IndexOutOfBoundsException e) {
-            sayln("types.Task does not exist!");
+            sayln("Task does not exist!");
+            say("Please provide a task number from 1 to ");
+            sayln(String.valueOf(todoList.size()));
+        }
+    }
+
+    private static void deleteTask(String[] commandArgsPair) {
+        if (todoList.isEmpty()) {
+            sayln("Your todo list is empty, please add a task before deleting!");
+            return;
+        }
+        try {
+            int taskNumber = Integer.parseInt(commandArgsPair[1]);
+            Task task = todoList.remove(taskNumber - 1);
+            sayln("OK, I've removed this task:");
+            sayln(task.getTask());
+            int size = todoList.size();
+            if (size > 0) {
+                sayln("Now you have " + size + (size == 1 ? " task" : " tasks") + " in the list");
+            } else {
+                sayln("Your todo list is empty. ");
+            }
+        } catch (NumberFormatException e) {
+            sayln("Please tell me a valid task number to delete!");
+            sayln("Run `list` to see all available tasks.");
+            sayln("delete [task number from list]");
+        } catch (IndexOutOfBoundsException e) {
+            sayln("Task does not exist!");
             say("Please provide a task number from 1 to ");
             sayln(String.valueOf(todoList.size()));
         }
@@ -198,9 +225,12 @@ public class Pat {
             case "unmark":
                 unmarkTask(commandArgsPair);
                 break;
+            case "delete":
+                deleteTask(commandArgsPair);
+                break;
             default:
                 sayln("Please give me a valid command!");
-                sayln("[bye/list/todo/deadline/event/mark/unmark]");
+                sayln("[bye/list/todo/deadline/event/mark/unmark/delete]");
             }
         } while (!saidBye);
     }
