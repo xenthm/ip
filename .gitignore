@@ -13,5 +13,9 @@ src/pat/resources/docs/
 *.iml
 bin/
 
+# Testing
 /text-ui-test/ACTUAL.TXT
 text-ui-test/EXPECTED-UNIX.TXT
+
+# Saved data
+/data/
