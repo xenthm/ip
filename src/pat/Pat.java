@@ -1,4 +1,5 @@
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -26,7 +27,6 @@ public class Pat {
 
     // data path
     private static final Path dataPath = Paths.get("data", "list.txt");
-    private static File dataFile;
 
     private static final ArrayList<Task> todoList = new ArrayList<>();
 
@@ -218,9 +218,7 @@ public class Pat {
         } while (!saidBye);
     }
 
-    private static void checkDataFile() throws IOException, RuntimeException {
-        dataFile = dataPath.toFile();
-
+    private static void checkDataFile(File dataFile) throws IOException, RuntimeException {
         // Checks if data directory exists
         if (dataFile.getParentFile().mkdirs()) {
             sayRedln("Directory \"" + dataFile.getParentFile() + "\" created.");
@@ -275,8 +273,9 @@ public class Pat {
 
     private static void writeListToFile() {
         FileWriter fw = null;
+        File dataFile = dataPath.toFile();
         try {
-            checkDataFile();
+            checkDataFile(dataFile);
             fw = new FileWriter(dataFile);
             fw.write(listToFile());
         } catch (IOException e) {
@@ -294,7 +293,50 @@ public class Pat {
         }
     }
 
+    private static void readList() {
+        File dataFile = dataPath.toFile();
+        if (dataFile.exists()) {
+            try {
+                Scanner s = new Scanner(dataFile);
+                while (s.hasNextLine()) {
+                    String line = s.nextLine();
+                    if (line.equals(System.lineSeparator())) {
+                        break;
+                    }
+                    String[] taskParams = line.split("\\|");
+                    char taskType = taskParams[0].charAt(0);
+                    String description = taskParams[1];
+                    boolean isDone;
+                    switch (taskType) {
+                    case 'T':
+                        isDone = taskParams[2].equals("y");
+                        todoList.add(new Todo(description, isDone));
+                        break;
+                    case 'D':
+                        String by = taskParams[2];
+                        isDone = taskParams[3].equals("y");
+                        todoList.add(new Deadline(description, by, isDone));
+                        break;
+                    case 'E':
+                        String from = taskParams[2];
+                        String to = taskParams[3];
+                        isDone = taskParams[4].equals("y");
+                        todoList.add(new Event(description, from, to, isDone));
+                        break;
+                    default:
+                        System.out.println("Invalid task type in data file");
+                        break;
+                    }
+                }
+                sayRedln("Previous list data restored!");
+            } catch (FileNotFoundException e) {
+                sayRedln("File not found: " + e.getMessage());
+            }
+        }
+    }
+
     public static void main(String[] args) {
+        readList();
         greet();
         runChat();
         writeListToFile();
