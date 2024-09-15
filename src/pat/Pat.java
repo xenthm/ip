@@ -1,3 +1,9 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Scanner;
 import java.util.ArrayList;
 
@@ -19,6 +25,9 @@ public class Pat {
     public static final String ANSI_MOVE_TO_START_OF_NEXT_LINE = "\033[E";
     public static final String INDENT = "    ";
 
+    // data path
+    private static final Path dataPath = Paths.get("data", "list.txt");
+
     private static final ArrayList<Task> todoList = new ArrayList<>();
 
     private static void say(String message) {
@@ -29,8 +38,12 @@ public class Pat {
         System.out.println(ANSI_PINK + message + ANSI_RESET);
     }
 
+    private static void sayRedln(String message) {
+        System.out.println(ANSI_RED + message + ANSI_RESET);
+    }
+
     private static void greet() {
-        System.out.println(ANSI_RED + "(Type \"bye\" to end the chat)" + ANSI_RESET);
+        sayRedln("(Type \"bye\" to end the chat)");
         sayln("Hello! This is Pat!");
         sayln("What can I do for you?");
     }
@@ -235,9 +248,128 @@ public class Pat {
         } while (!saidBye);
     }
 
+    private static void checkDataFile(File dataFile) throws IOException, RuntimeException {
+        // Checks if data directory exists
+        if (dataFile.getParentFile().mkdirs()) {
+            sayRedln("Directory \"" + dataFile.getParentFile() + "\" created.");
+        }
+
+        // Checks if file exists
+        if (dataFile.createNewFile()) {
+            sayRedln("File \"" + dataFile.getName() + "\" created.");
+        }
+    }
+
+    private static void appendTask(StringBuilder result, Task task) {
+        Object taskClass = task.getClass();
+        if (taskClass.equals(Todo.class)) {
+            result.append("T|")
+                    .append(task.getDescription())
+                    .append("|")
+                    .append(task.isDone() ? "y" : "n")
+                    .append(System.lineSeparator());
+        } else if (taskClass.equals(Deadline.class)) {
+            result.append("D|")
+                    .append(task.getDescription())
+                    .append("|")
+                    .append(((Deadline) task).getBy())
+                    .append("|")
+                    .append(task.isDone() ? "y" : "n")
+                    .append(System.lineSeparator());
+
+        } else if (taskClass.equals(Event.class)) {
+            result.append("E|")
+                    .append(task.getDescription())
+                    .append("|")
+                    .append(((Event) task).getFrom())
+                    .append("|")
+                    .append(((Event) task).getTo())
+                    .append("|")
+                    .append(task.isDone() ? "y" : "n")
+                    .append(System.lineSeparator());
+
+        } else {
+            System.out.println("invalid task");
+        }
+    }
+
+    private static String listToFile() {
+        StringBuilder result = new StringBuilder();
+        for (Task task : todoList) {
+            appendTask(result, task);
+        }
+        return result.toString();
+    }
+
+    private static void writeListToFile() {
+        FileWriter fw = null;
+        File dataFile = dataPath.toFile();
+        try {
+            checkDataFile(dataFile);
+            fw = new FileWriter(dataFile);
+            fw.write(listToFile());
+        } catch (IOException e) {
+            sayRedln("Cannot write to file: " + e.getMessage());
+        } catch (RuntimeException e) {
+            sayRedln("Other error writing to file: " + e.getMessage());
+        } finally {
+            if (fw != null) {
+                try {
+                    fw.close();
+                } catch (IOException e) {
+                    sayRedln("Cannot close file: " + e.getMessage());
+                }
+            }
+        }
+    }
+
+    private static void readList() {
+        File dataFile = dataPath.toFile();
+        if (dataFile.exists()) {
+            try {
+                Scanner s = new Scanner(dataFile);
+                while (s.hasNextLine()) {
+                    String line = s.nextLine();
+                    if (line.equals(System.lineSeparator())) {
+                        break;
+                    }
+                    String[] taskParams = line.split("\\|");
+                    char taskType = taskParams[0].charAt(0);
+                    String description = taskParams[1];
+                    boolean isDone;
+                    switch (taskType) {
+                    case 'T':
+                        isDone = taskParams[2].equals("y");
+                        todoList.add(new Todo(description, isDone));
+                        break;
+                    case 'D':
+                        String by = taskParams[2];
+                        isDone = taskParams[3].equals("y");
+                        todoList.add(new Deadline(description, by, isDone));
+                        break;
+                    case 'E':
+                        String from = taskParams[2];
+                        String to = taskParams[3];
+                        isDone = taskParams[4].equals("y");
+                        todoList.add(new Event(description, from, to, isDone));
+                        break;
+                    default:
+                        System.out.println("Invalid task type in data file");
+                        break;
+                    }
+                }
+                sayRedln("Previous list data restored!");
+            } catch (FileNotFoundException e) {
+                sayRedln("File not found: " + e.getMessage());
+            }
+        }
+    }
+
     public static void main(String[] args) {
+        readList();
         greet();
         runChat();
+        writeListToFile();
         bye();
     }
 }
