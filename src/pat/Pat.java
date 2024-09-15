@@ -78,12 +78,15 @@ public class Pat {
             return;
         }
         try {
+            if (commandArgsPair.length < 2) {   // No task number provided
+                throw new InvalidCommandException();
+            }
             int taskNumber = Integer.parseInt(commandArgsPair[1]);
             Task task = todoList.get(taskNumber - 1);
             task.markDone();
             sayln("Nice! I've marked this task as done:");
             sayln(task.getTask());
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException | InvalidCommandException e) {
             sayln("Please tell me a valid task number to mark!");
             sayln("Run `list` to see all available tasks.");
             sayln("mark [task number from list]");
@@ -100,12 +103,15 @@ public class Pat {
             return;
         }
         try {
+            if (commandArgsPair.length < 2) {   // No task number provided
+                throw new InvalidCommandException();
+            }
             int taskNumber = Integer.parseInt(commandArgsPair[1]);
             Task task = todoList.get(taskNumber - 1);
             task.markNotDone();
             sayln("OK, I've marked this task as not done yet:");
             sayln(task.getTask());
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException | InvalidCommandException e) {
             sayln("Please tell me a valid task number to unmark!");
             sayln("Run `list` to see all available tasks.");
             sayln("unmark [task number from list]");
@@ -122,6 +128,9 @@ public class Pat {
             return;
         }
         try {
+            if (commandArgsPair.length < 2) {   // No task number provided
+                throw new InvalidCommandException();
+            }
             int taskNumber = Integer.parseInt(commandArgsPair[1]);
             Task task = todoList.remove(taskNumber - 1);
             sayln("OK, I've removed this task:");
@@ -132,7 +141,7 @@ public class Pat {
             } else {
                 sayln("Your todo list is empty. ");
             }
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException | InvalidCommandException e) {
             sayln("Please tell me a valid task number to delete!");
             sayln("Run `list` to see all available tasks.");
             sayln("delete [task number from list]");
