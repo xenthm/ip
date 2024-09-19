@@ -26,6 +26,10 @@ public class Event extends Task {
         this.to = to;
     }
 
+    public Event(String[] eventFromToTriplet) {
+        this(eventFromToTriplet[0], eventFromToTriplet[1], eventFromToTriplet[2] );
+    }
+
     public Event(String description, String from, String to, boolean isDone) {
         super(description, isDone);
         this.from = from;

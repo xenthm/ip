@@ -16,6 +16,10 @@ public class Deadline extends Task {
         this.by = by;
     }
 
+    public Deadline(String[] deadlineByPair) {
+        this(deadlineByPair[0], deadlineByPair[1]);
+    }
+
     public Deadline(String description, String by, boolean isDone) {
         super(description, isDone);
         this.by = by;
