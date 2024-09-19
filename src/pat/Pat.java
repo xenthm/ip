@@ -33,15 +33,8 @@ public class Pat {
 
     private void handleDeadline(String[] commandArgsPair) {
         try {
-            String[] deadlineByPair = commandArgsPair[1].split("/by", 2);
-            String deadline = deadlineByPair[0].trim();
-            String by = deadlineByPair[1].trim();
-            if (deadline.isEmpty()) {
-                throw new InvalidCommandException();
-            } else if (by.isEmpty()) {
-                throw new EmptyDateException("By");
-            }
-            tasklist.addToList(new Deadline(deadline, by));
+            String[] deadlineByPair = Parser.parseDeadline(commandArgsPair);
+            tasklist.addToList(new Deadline(deadlineByPair));
         } catch (InvalidCommandException | IndexOutOfBoundsException e) {
             Ui.sayln("Please give me a valid deadline to add!");
             Ui.sayln("deadline [task] /by [deadline]");
@@ -53,19 +46,8 @@ public class Pat {
 
     private void handleEvent(String[] commandArgsPair) {
         try {
-            String[] eventArgsPair = commandArgsPair[1].split("/from", 2);
-            String event = eventArgsPair[0].trim();
-            String[] fromToPair = eventArgsPair[1].split("/to", 2);
-            String from = fromToPair[0].trim();
-            String to = fromToPair[1].trim();
-            if (event.isEmpty()) {
-                throw new InvalidCommandException();
-            } else if (from.isEmpty()) {
-                throw new EmptyDateException("Empty from");
-            } else if (to.isEmpty()) {
-                throw new EmptyDateException("Empty to");
-            }
-            tasklist.addToList(new Event(event, from, to));
+            String[] eventFromToTriplet = Parser.parseEvent(commandArgsPair);
+            tasklist.addToList(new Event(eventFromToTriplet));
         } catch (InvalidCommandException | IndexOutOfBoundsException e) {
             Ui.sayln("Please give me a valid event to add!");
             Ui.sayln("event [task] /from [start] /to [end]");
