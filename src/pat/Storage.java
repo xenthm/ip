@@ -11,12 +11,12 @@ import java.nio.file.Path;
 import java.util.Scanner;
 
 public class Storage {
-    TaskList tasklist;
+    TaskList taskList;
     Path dataPath;
     File dataFile;
 
     public Storage(TaskList tasklist, Path dataPath) {
-        this.tasklist = tasklist;
+        this.taskList = tasklist;
         this.dataPath = dataPath;
         dataFile = dataPath.toFile();
         readList();
@@ -69,7 +69,7 @@ public class Storage {
 
     public String listToFile() {
         StringBuilder result = new StringBuilder();
-        for (Task task : tasklist) {
+        for (Task task : taskList) {
             appendTask(result, task);
         }
         return result.toString();
@@ -112,18 +112,18 @@ public class Storage {
                     switch (taskType) {
                     case 'T':
                         isDone = taskParams[2].equals("y");
-                        tasklist.add(new Todo(description, isDone));
+                        taskList.add(new Todo(description, isDone));
                         break;
                     case 'D':
                         String by = taskParams[2];
                         isDone = taskParams[3].equals("y");
-                        tasklist.add(new Deadline(description, by, isDone));
+                        taskList.add(new Deadline(description, by, isDone));
                         break;
                     case 'E':
                         String from = taskParams[2];
                         String to = taskParams[3];
                         isDone = taskParams[4].equals("y");
-                        tasklist.add(new Event(description, from, to, isDone));
+                        taskList.add(new Event(description, from, to, isDone));
                         break;
                     default:
                         System.out.println("Invalid task type in data file");
