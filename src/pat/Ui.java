@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 public class Ui {
     // ANSI escape codes to change chat format
     public static final String ANSI_RED = "\033[31m";
@@ -28,5 +30,17 @@ public class Ui {
 
     public static void bye() {
         sayln("Bye! Remember, this is Pat!");
+    }
+
+    public static String readCommand(Scanner scanner) {
+        String line;
+        System.out.print("Type your command: ");
+        line = scanner.nextLine().trim();
+        if (line.isEmpty()) {
+            System.out.print(ANSI_MOVE_TO_START_OF_PREVIOUS_LINE);
+        }
+        System.out.print(ANSI_MOVE_TO_START_OF_PREVIOUS_LINE + ANSI_ERASE_LINE + line
+                + ANSI_MOVE_TO_START_OF_NEXT_LINE);
+        return line;
     }
 }

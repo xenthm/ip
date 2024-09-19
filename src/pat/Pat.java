@@ -81,16 +81,8 @@ public class Pat {
         Scanner in = new Scanner(System.in);
         boolean saidBye = false;
         do {
-            System.out.print("Type your command: ");
-            line = in.nextLine().trim();
-            if (line.isEmpty()) {
-                System.out.print(Ui.ANSI_MOVE_TO_START_OF_PREVIOUS_LINE);
-                continue;
-            }
-            System.out.print(Ui.ANSI_MOVE_TO_START_OF_PREVIOUS_LINE + Ui.ANSI_ERASE_LINE + line
-                    + Ui.ANSI_MOVE_TO_START_OF_NEXT_LINE);
-
-            String[] commandArgsPair = line.split(" ", 2);
+            line = Ui.readCommand(in);
+            String[] commandArgsPair = Parser.splitCommandArgs(line);
             String command = commandArgsPair[0];
             switch (command) {
             case "bye":
