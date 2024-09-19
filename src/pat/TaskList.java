@@ -21,4 +21,20 @@ public class TaskList extends ArrayList<Task> {
             Ui.sayln(Ui.INDENT + (i + 1) + "." + get(i).getTask());
         }
     }
+
+    public void printAllWithKeyword(String keyword) {
+        boolean atLeastOneFound = false;
+        Ui.sayln("Here are the matching tasks in your list:");
+        for (int i = 0; i < size(); i++) {
+            Task task = this.get(i);
+            if (task.getDescription().toLowerCase().contains(keyword.toLowerCase())) {
+                atLeastOneFound = true;
+                Ui.sayln(Ui.INDENT + (i + 1) + "." + this.get(i).getTask());
+            }
+        }
+        if (!atLeastOneFound) {
+            Ui.say(Ui.ANSI_MOVE_TO_START_OF_PREVIOUS_LINE + Ui.ANSI_ERASE_LINE);
+            Ui.sayln("No tasks with keyword \"" + keyword + "\" found!");
+        }
+    }
 }
