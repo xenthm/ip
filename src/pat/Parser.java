@@ -39,23 +39,26 @@ public class Parser {
         case "delete":
             deleteTask(taskList, commandArgsPair);
             break;
+        case "find":
+            findTask(taskList, commandArgsPair);
+            break;
         default:
             Ui.sayln("Please give me a valid command!");
-            Ui.sayln("[bye/list/todo/deadline/event/mark/unmark/delete]");
+            Ui.sayln("[bye/list/todo/deadline/event/mark/unmark/delete/find]");
         }
     }
 
-    public static String parseTodo(String[] commandArgsPair) throws InvalidCommandException, IndexOutOfBoundsException {
-        String todo = commandArgsPair[1].trim();
-        if (todo.isEmpty()) {
+    public static String parseOneArg(String[] commandArgsPair) throws InvalidCommandException, IndexOutOfBoundsException {
+        String arg = commandArgsPair[1].trim();
+        if (arg.isEmpty()) {
             throw new InvalidCommandException();
         }
-        return todo;
+        return arg;
     }
 
     private static void handleTodo(TaskList taskList, String[] commandArgsPair) {
         try {
-            String todo = parseTodo(commandArgsPair);
+            String todo = parseOneArg(commandArgsPair);
             taskList.addToList(new Todo(todo));
         } catch (InvalidCommandException | IndexOutOfBoundsException e) {
             Ui.sayln("Please give me a valid todo to add!");
@@ -198,6 +201,20 @@ public class Parser {
             Ui.sayln("Task does not exist!");
             Ui.say("Please provide a task number from 1 to ");
             Ui.sayln(String.valueOf(taskList.size()));
+        }
+    }
+
+    private static void findTask(TaskList taskList, String[] commandArgsPair) {
+        if (taskList.isEmpty()) {
+            Ui.sayln("Your task list is empty, please add a task before finding!");
+            return;
+        }
+        try {
+            String keyword = parseOneArg(commandArgsPair);
+            taskList.printAllWithKeyword(keyword);
+        } catch (InvalidCommandException | IndexOutOfBoundsException e) {
+            Ui.sayln("Please give me a valid keyword to find!");
+            Ui.sayln("find [keyword]");
         }
     }
 }
