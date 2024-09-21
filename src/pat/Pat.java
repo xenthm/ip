@@ -3,8 +3,8 @@ import java.nio.file.Paths;
 import java.util.Scanner;
 
 public class Pat {
-    TaskList taskList;
-    Storage storage;
+    private final TaskList taskList;
+    private final Storage storage;
 
     public Pat(Path dataPath) {
         taskList = new TaskList();
