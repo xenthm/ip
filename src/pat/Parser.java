@@ -207,7 +207,7 @@ public class Parser {
         if (commandArgsPair.length < 2) {   // No task number provided
             throw new InvalidCommandException();
         }
-        return Integer.parseInt(commandArgsPair[1]);
+        return Integer.parseInt(commandArgsPair[1].trim());
     }
 
     /**
