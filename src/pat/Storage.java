@@ -10,11 +10,22 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Scanner;
 
+/**
+ * Helper class to handle file storage needs for the Pat chatbot. Contains a reference to the <code>TaskList</code>
+ * in <code>Pat</code>.
+ */
 public class Storage {
     TaskList taskList;
     Path dataPath;
     File dataFile;
 
+    /**
+     * Constructor for <code>Storage</code>. Resolves given <code>Path</code> to a <code>File</code> and tries to
+     * restore the task <code>Task</code> list from the file.
+     *
+     * @param tasklist <code>TaskList</code> from Pat.
+     * @param dataPath <code>Path</code> to <code>.txt</code> file.
+     */
     public Storage(TaskList tasklist, Path dataPath) {
         this.taskList = tasklist;
         this.dataPath = dataPath;
@@ -22,6 +33,13 @@ public class Storage {
         readList();
     }
 
+    /**
+     * Checks if the <code>.txt</code> file and its parent directory (as defined in the <code>Pat</code> class
+     * exists, creating them if they don't.
+     *
+     * @throws IOException       If unable to create file.
+     * @throws SecurityException If the user doesn't have the required permissions for data file management.
+     */
     public void checkDataFile() throws IOException, SecurityException {
         // Checks if data directory exists
         if (dataFile.getParentFile().mkdirs()) {
@@ -34,6 +52,13 @@ public class Storage {
         }
     }
 
+    /**
+     * Appends <code>Task</code> to a <code>StringBuilder</code> object <code>result</code> based on its subclass
+     * (<code>Todo</code>, <code>Deadline</code>, or <code>Event</code>).
+     *
+     * @param result <code>StringBuilder</code> object to append to.
+     * @param task   <code>Task</code> to append.
+     */
     public void appendTask(StringBuilder result, Task task) {
         Object taskClass = task.getClass();
         if (taskClass.equals(Todo.class)) {
@@ -67,6 +92,9 @@ public class Storage {
         }
     }
 
+    /**
+     * Builds and returns a <code>StringBuilder</code> with the formatted entries from the <code>Task</code> list.
+     */
     public String listToFile() {
         StringBuilder result = new StringBuilder();
         for (Task task : taskList) {
@@ -75,6 +103,9 @@ public class Storage {
         return result.toString();
     }
 
+    /**
+     * Writes the contents of the <code>Task</code> list to <code>dataFile</code>.
+     */
     public void writeListToFile() {
         FileWriter fw = null;
         try {
@@ -96,6 +127,10 @@ public class Storage {
         }
     }
 
+    /**
+     * Reads the contents of the <code>dataFile</code> if it exists and adds them to the <code>Task</code> list in
+     * the same order.
+     */
     public void readList() {
         if (dataFile.exists()) {
             try {
