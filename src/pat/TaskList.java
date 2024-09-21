@@ -2,7 +2,15 @@ import types.Task;
 
 import java.util.ArrayList;
 
+/**
+ * Class for TaskList, which extends ArrayList. Adds printing and adding methods.
+ */
 public class TaskList extends ArrayList<Task> {
+    /**
+     * Adds Task (or its subclasses) to the <code>TaskList</code>, providing feedback to the user.
+     *
+     * @param task Instance of <code>Task</code> to be added.
+     */
     public void addToList(Task task) {
         add(task);
         Ui.sayln("Added this task: ");
@@ -11,6 +19,9 @@ public class TaskList extends ArrayList<Task> {
         Ui.sayln("Now you have " + size + (size == 1 ? " task" : " tasks") + " in the list");
     }
 
+    /**
+     * Prints a list of all <code>Tasks</code> in <code>TaskList</code>, checking if it is empty.
+     */
     public void printList() {
         if (isEmpty()) {
             Ui.sayln("Your todo list is empty!");
@@ -22,6 +33,12 @@ public class TaskList extends ArrayList<Task> {
         }
     }
 
+    /**
+     * Iterates through the <code>TaskList</code> and prints the entry (including its task number) if its description
+     * contains the <code>keyword</code>.
+     *
+     * @param keyword Keyword to search for.
+     */
     public void printAllWithKeyword(String keyword) {
         boolean atLeastOneFound = false;
         Ui.sayln("Here are the matching tasks in your list:");
