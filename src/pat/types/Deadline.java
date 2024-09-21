@@ -21,10 +21,6 @@ public class Deadline extends Task {
         return by;
     }
 
-    public void setBy(String by) {
-        this.by = by;
-    }
-
     @Override
     public String getTask() {
         return "[D]" + super.getTask() + " (by: " + by + ")";
