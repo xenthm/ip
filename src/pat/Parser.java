@@ -5,15 +5,33 @@ import types.Event;
 import types.Task;
 import types.Todo;
 
+/**
+ * Utility class to parse commands given to the Pat chatbot. Also contains the logic for the various commands.
+ */
 public class Parser {
+    /**
+     * Splits the user input into command and arguments.
+     *
+     * @param line User input from <code>Scanner</code>.
+     * @return <code>String</code> array with the command as the first element and its arguments in the second element.
+     */
     private static String[] splitCommandArgs(String line) {
         return line.split(" ", 2);
     }
 
+    /**
+     * Returns true if the user has typed the "bye" command.
+     */
     public static boolean saidBye(String line) {
         return splitCommandArgs(line)[0].equals("bye");
     }
 
+    /**
+     * Extracts the command from the user input and performs the corresponding action.
+     *
+     * @param taskList <code>TaskList</code> from Pat.
+     * @param line     User input from <code>Scanner</code>.
+     */
     public static void parseCommand(TaskList taskList, String line) {
         String[] commandArgsPair = splitCommandArgs(line);
         String command = commandArgsPair[0];
@@ -48,7 +66,17 @@ public class Parser {
         }
     }
 
-    public static String parseOneArg(String[] commandArgsPair) throws InvalidCommandException, IndexOutOfBoundsException {
+    /**
+     * Returns the argument for a one-argument command (eg. adding a <code>Todo</code>) from parsed user input.
+     *
+     * @param commandArgsPair <code>String</code> array with the command in the first element and potentially an
+     *                        argument in the second element.
+     * @return The argument given by the user, if it exists.
+     * @throws InvalidCommandException   If the user just typed a bunch of spaces after the command.
+     * @throws IndexOutOfBoundsException If no argument was provided by the user.
+     */
+    public static String parseOneArg(String[] commandArgsPair) throws InvalidCommandException,
+            IndexOutOfBoundsException {
         String arg = commandArgsPair[1].trim();
         if (arg.isEmpty()) {
             throw new InvalidCommandException();
@@ -56,6 +84,13 @@ public class Parser {
         return arg;
     }
 
+    /**
+     * Adds a new <code>Todo</code> to the <code>Task</code> list based on the parsed user input.
+     *
+     * @param taskList        <code>TaskList</code> from Pat.
+     * @param commandArgsPair code>String</code> array with the command in the first element and potentially an
+     *                        argument in the second element.
+     */
     private static void handleTodo(TaskList taskList, String[] commandArgsPair) {
         try {
             String todo = parseOneArg(commandArgsPair);
@@ -66,6 +101,16 @@ public class Parser {
         }
     }
 
+    /**
+     * Further splits the parsed user input for the add <code>Deadline</code> command.
+     *
+     * @param commandArgsPair <code>String</code> array with the command in the first element and potentially an
+     *                        argument in the second element.
+     * @return A <code>String</code> array with the <code>Deadline</code> description in the first element and the
+     * deadline in the second element.
+     * @throws InvalidCommandException If no command was provided.
+     * @throws EmptyDateException      If no <code>by</code> argument was provided.
+     */
     public static String[] parseDeadline(String[] commandArgsPair) throws InvalidCommandException, EmptyDateException,
             IndexOutOfBoundsException {
         String[] deadlineByPair = commandArgsPair[1].split("/by", 2);
@@ -79,6 +124,13 @@ public class Parser {
         return new String[]{deadline, by};
     }
 
+    /**
+     * Adds a new <code>Deadline</code> to the <code>Task</code> list based on the parsed user input.
+     *
+     * @param taskList        <code>TaskList</code> from Pat.
+     * @param commandArgsPair code>String</code> array with the command in the first element and potentially an
+     *                        argument in the second element.
+     */
     private static void handleDeadline(TaskList taskList, String[] commandArgsPair) {
         try {
             String[] deadlineByPair = Parser.parseDeadline(commandArgsPair);
@@ -92,6 +144,16 @@ public class Parser {
         }
     }
 
+    /**
+     * Further splits the parsed user input for the add <code>Event</code> command.
+     *
+     * @param commandArgsPair <code>String</code> array with the command in the first element and potentially an
+     *                        argument in the second element.
+     * @return A <code>String</code> array with the <code>Event</code> description in the first element, the
+     * start time in the second element, and the end time in the third element.
+     * @throws InvalidCommandException If no command was provided.
+     * @throws EmptyDateException      If no <code>from</code> or <code>to</code> argument was provided.
+     */
     public static String[] parseEvent(String[] commandArgsPair) throws InvalidCommandException, EmptyDateException,
             IndexOutOfBoundsException {
         String[] eventArgsPair = commandArgsPair[1].split("/from", 2);
@@ -109,6 +171,13 @@ public class Parser {
         return new String[]{event, from, to};
     }
 
+    /**
+     * Adds a new <code>Event</code> to the <code>Task</code> list based on the parsed user input.
+     *
+     * @param taskList        <code>TaskList</code> from Pat.
+     * @param commandArgsPair code>String</code> array with the command in the first element and potentially an
+     *                        argument in the second element.
+     */
     private static void handleEvent(TaskList taskList, String[] commandArgsPair) {
         try {
             String[] eventFromToTriplet = Parser.parseEvent(commandArgsPair);
@@ -122,6 +191,15 @@ public class Parser {
         }
     }
 
+    /**
+     * Returns the task number for the commands that require it (eg. mark, unmark, delete) from parsed user input.
+     *
+     * @param commandArgsPair <code>String</code> array with the command in the first element and potentially an
+     *                        argument in the second element.
+     * @return An <code>Integer</code> representing the task number of the <code>Task</code> in the list.
+     * @throws InvalidCommandException If no argument was provided.
+     * @throws NumberFormatException   If the argument is not a parsable integer.
+     */
     private static int parseTaskNumber(String[] commandArgsPair) throws NumberFormatException, InvalidCommandException,
             IndexOutOfBoundsException {
         if (commandArgsPair.length < 2) {   // No task number provided
@@ -130,6 +208,13 @@ public class Parser {
         return Integer.parseInt(commandArgsPair[1]);
     }
 
+    /**
+     * Marks <code>Task</code> with given task number as done.
+     *
+     * @param taskList        <code>TaskList</code> from Pat.
+     * @param commandArgsPair code>String</code> array with the command in the first element and potentially an
+     *                        argument in the second element.
+     */
     private static void markTask(TaskList taskList, String[] commandArgsPair) {
         if (taskList.isEmpty()) {
             Ui.sayln("Your task list is empty, please add a task before marking!");
@@ -152,6 +237,13 @@ public class Parser {
         }
     }
 
+    /**
+     * Unmarks <code>Task</code> with given task number as not done.
+     *
+     * @param taskList        <code>TaskList</code> from Pat.
+     * @param commandArgsPair code>String</code> array with the command in the first element and potentially an
+     *                        argument in the second element.
+     */
     private static void unmarkTask(TaskList taskList, String[] commandArgsPair) {
         if (taskList.isEmpty()) {
             Ui.sayln("Your task list is empty, please add a task before unmarking!");
@@ -174,6 +266,13 @@ public class Parser {
         }
     }
 
+    /**
+     * Deletes <code>Task</code> with given task number.
+     *
+     * @param taskList        <code>TaskList</code> from Pat.
+     * @param commandArgsPair code>String</code> array with the command in the first element and potentially an
+     *                        argument in the second element.
+     */
     private static void deleteTask(TaskList taskList, String[] commandArgsPair) {
         if (taskList.isEmpty()) {
             Ui.sayln("Your task list is empty, please add a task before deleting!");
@@ -204,6 +303,13 @@ public class Parser {
         }
     }
 
+    /**
+     * Finds all <code>Task</code> that contain the given keyword from user input.
+     *
+     * @param taskList        <code>TaskList</code> from Pat.
+     * @param commandArgsPair code>String</code> array with the command in the first element and potentially an
+     *                        argument in the second element.
+     */
     private static void findTask(TaskList taskList, String[] commandArgsPair) {
         if (taskList.isEmpty()) {
             Ui.sayln("Your task list is empty, please add a task before finding!");
