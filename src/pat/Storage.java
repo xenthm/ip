@@ -22,7 +22,7 @@ public class Storage {
         readList();
     }
 
-    public void checkDataFile() throws IOException, RuntimeException {
+    public void checkDataFile() throws IOException, SecurityException {
         // Checks if data directory exists
         if (dataFile.getParentFile().mkdirs()) {
             Ui.sayRedln("Directory \"" + dataFile.getParentFile() + "\" created.");
@@ -83,7 +83,7 @@ public class Storage {
             fw.write(listToFile());
         } catch (IOException e) {
             Ui.sayRedln("Cannot write to file: " + e.getMessage());
-        } catch (RuntimeException e) {
+        } catch (SecurityException e) {
             Ui.sayRedln("Other error writing to file: " + e.getMessage());
         } finally {
             if (fw != null) {
