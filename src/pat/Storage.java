@@ -15,32 +15,32 @@ import java.util.Scanner;
  * in <code>Pat</code>.
  */
 public class Storage {
-    TaskList taskList;
-    Path dataPath;
-    File dataFile;
+    private TaskList taskList;
+    private Path dataPath;
+    private File dataFile;
 
     /**
      * Constructor for <code>Storage</code>. Resolves given <code>Path</code> to a <code>File</code> and tries to
      * restore the task <code>Task</code> list from the file.
      *
-     * @param tasklist <code>TaskList</code> from Pat.
+     * @param taskList <code>TaskList</code> from Pat.
      * @param dataPath <code>Path</code> to <code>.txt</code> file.
      */
-    public Storage(TaskList tasklist, Path dataPath) {
-        this.taskList = tasklist;
+    public Storage(TaskList taskList, Path dataPath) {
+        this.taskList = taskList;
         this.dataPath = dataPath;
         dataFile = dataPath.toFile();
         readList();
     }
 
     /**
-     * Checks if the <code>.txt</code> file and its parent directory (as defined in the <code>Pat</code> class
+     * Checks if the <code>.txt</code> file and its parent directory as defined in the <code>Pat</code> class
      * exists, creating them if they don't.
      *
      * @throws IOException       If unable to create file.
      * @throws SecurityException If the user doesn't have the required permissions for data file management.
      */
-    public void checkDataFile() throws IOException, SecurityException {
+    private void checkDataFile() throws IOException, SecurityException {
         // Checks if data directory exists
         if (dataFile.getParentFile().mkdirs()) {
             Ui.sayRedln("Directory \"" + dataFile.getParentFile() + "\" created.");
@@ -59,7 +59,7 @@ public class Storage {
      * @param result <code>StringBuilder</code> object to append to.
      * @param task   <code>Task</code> to append.
      */
-    public void appendTask(StringBuilder result, Task task) {
+    private void appendTask(StringBuilder result, Task task) {
         Object taskClass = task.getClass();
         if (taskClass.equals(Todo.class)) {
             result.append("T|")
@@ -95,7 +95,7 @@ public class Storage {
     /**
      * Builds and returns a <code>StringBuilder</code> with the formatted entries from the <code>Task</code> list.
      */
-    public String listToFile() {
+    private String listToFile() {
         StringBuilder result = new StringBuilder();
         for (Task task : taskList) {
             appendTask(result, task);
@@ -131,7 +131,7 @@ public class Storage {
      * Reads the contents of the <code>dataFile</code> if it exists and adds them to the <code>Task</code> list in
      * the same order.
      */
-    public void readList() {
+    private void readList() {
         if (dataFile.exists()) {
             try {
                 Scanner s = new Scanner(dataFile);
