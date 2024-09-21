@@ -60,6 +60,8 @@ public class Parser {
         case "find":
             findTask(taskList, commandArgsPair);
             break;
+        case "":
+            break;
         default:
             Ui.sayln("Please give me a valid command!");
             Ui.sayln("[bye/list/todo/deadline/event/mark/unmark/delete/find]");

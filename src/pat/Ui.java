@@ -63,9 +63,10 @@ public class Ui {
         line = scanner.nextLine().trim();
         if (line.isEmpty()) {
             System.out.print(ANSI_MOVE_TO_START_OF_PREVIOUS_LINE);
+        } else {
+            System.out.print(ANSI_MOVE_TO_START_OF_PREVIOUS_LINE + ANSI_ERASE_LINE + line
+                    + ANSI_MOVE_TO_START_OF_NEXT_LINE);
         }
-        System.out.print(ANSI_MOVE_TO_START_OF_PREVIOUS_LINE + ANSI_ERASE_LINE + line
-                + ANSI_MOVE_TO_START_OF_NEXT_LINE);
         return line;
     }
 }
