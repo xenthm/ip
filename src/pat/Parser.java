@@ -60,6 +60,8 @@ public class Parser {
         case "find":
             findTask(taskList, commandArgsPair);
             break;
+        case "bye":
+            break;
         case "":
             break;
         default:
