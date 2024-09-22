@@ -6,9 +6,6 @@ Pat is a CLI chatbot that helps you keep track of your tasks and your progress. 
 
 ## Ending the Chat: `bye`
 
-> [!WARNING]
-> Your list is only saved when the `bye` command is given. 
-
 Ends your chat with Pat and tries to save your list in `./data/list.txt`.
 
 Format: `bye`
