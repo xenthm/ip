@@ -4,6 +4,10 @@
 
 Pat is a CLI chatbot that helps you keep track of your tasks and your progress. Inspired by Patrick Star.
 
+## Saving Your List
+
+Your list will be saved every time a command that modifies it is executed (such as `todo`, `mark`, and `delete`), and upon using the `bye` command. 
+
 ## Ending the Chat: `bye`
 
 Ends your chat with Pat and tries to save your list in `./data/list.txt`.
