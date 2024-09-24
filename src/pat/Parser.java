@@ -27,12 +27,14 @@ public class Parser {
     }
 
     /**
-     * Extracts the command from the user input and performs the corresponding action.
+     * Extracts the command from the user input and performs the corresponding action. Saves the state of the
+     * <code>Task</code> list after every command that modifies it.
      *
      * @param taskList <code>TaskList</code> from Pat.
+     * @param storage  <code>Storage</code> object for Pat.
      * @param line     User input from <code>Scanner</code>.
      */
-    public static void parseCommand(TaskList taskList, String line) {
+    public static void parseCommand(TaskList taskList, Storage storage, String line) {
         String[] commandArgsPair = splitCommandArgs(line);
         String command = commandArgsPair[0];
         switch (command) {
@@ -41,28 +43,32 @@ public class Parser {
             break;
         case "todo":
             handleTodo(taskList, commandArgsPair);
+            storage.writeListToFile();
             break;
         case "deadline":
             handleDeadline(taskList, commandArgsPair);
+            storage.writeListToFile();
             break;
         case "event":
             handleEvent(taskList, commandArgsPair);
+            storage.writeListToFile();
             break;
         case "mark":
             markTask(taskList, commandArgsPair);
+            storage.writeListToFile();
             break;
         case "unmark":
             unmarkTask(taskList, commandArgsPair);
+            storage.writeListToFile();
             break;
         case "delete":
             deleteTask(taskList, commandArgsPair);
+            storage.writeListToFile();
             break;
         case "find":
             findTask(taskList, commandArgsPair);
             break;
-        case "bye":
-            break;
-        case "":
+        case "bye", "":
             break;
         default:
             Ui.sayln("Please give me a valid command!");

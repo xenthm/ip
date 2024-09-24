@@ -29,7 +29,7 @@ public class Pat {
         Scanner in = new Scanner(System.in);
         do {
             line = Ui.readCommand(in);
-            Parser.parseCommand(taskList, line);
+            Parser.parseCommand(taskList, storage, line);
         } while (!Parser.saidBye(line));
         storage.writeListToFile();
         Ui.bye();
