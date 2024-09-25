@@ -1,1 +1,1 @@
-java -cp .\out\production\ip\ Pat
+java -cp .\out\production\ip pat.Pat

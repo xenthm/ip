@@ -1,7 +1,9 @@
-import types.Deadline;
-import types.Event;
-import types.Task;
-import types.Todo;
+package pat;
+
+import pat.types.Deadline;
+import pat.types.Event;
+import pat.types.Task;
+import pat.types.Todo;
 
 import java.io.File;
 import java.io.FileNotFoundException;

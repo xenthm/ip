@@ -1,4 +1,4 @@
-package types;
+package pat.types;
 
 /**
  * Class for <code>Deadline</code>. Includes a deadline stored in the field <code>by</code>.

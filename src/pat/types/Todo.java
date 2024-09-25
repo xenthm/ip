@@ -1,4 +1,4 @@
-package types;
+package pat.types;
 
 /**
  * Class for <code>Todo</code>. Behaves like a <code>Task</code>, but with an overridden <code>getTask</code> method.

@@ -1,4 +1,6 @@
-import types.Task;
+package pat;
+
+import pat.types.Task;
 
 import java.util.ArrayList;
 

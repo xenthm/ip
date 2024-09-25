@@ -1,4 +1,4 @@
-package types;
+package pat.types;
 
 /**
  * Class for <code>Event</code>. Includes a start and end time stored in <code>from </code> and <code>to</code>

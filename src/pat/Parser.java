@@ -1,9 +1,11 @@
-import exceptions.EmptyDateException;
-import exceptions.InvalidCommandException;
-import types.Deadline;
-import types.Event;
-import types.Task;
-import types.Todo;
+package pat;
+
+import pat.exceptions.EmptyDateException;
+import pat.exceptions.InvalidCommandException;
+import pat.types.Deadline;
+import pat.types.Event;
+import pat.types.Task;
+import pat.types.Todo;
 
 /**
  * Utility class to parse commands given to the Pat chatbot. Also contains the logic for the various commands.

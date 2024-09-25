@@ -1,4 +1,4 @@
-package types;
+package pat.types;
 
 /**
  * Super class for different <code>Task</code> types. Contains a description and status for whether it is marked as
