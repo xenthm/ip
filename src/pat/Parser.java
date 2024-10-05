@@ -100,7 +100,7 @@ public class Parser {
      * Adds a new <code>Todo</code> to the <code>Task</code> list based on the parsed user input.
      *
      * @param taskList        <code>TaskList</code> from Pat.
-     * @param commandArgsPair code>String</code> array with the command in the first element and potentially an
+     * @param commandArgsPair <code>String</code> array with the command in the first element and potentially an
      *                        argument in the second element.
      */
     private static void handleTodo(TaskList taskList, String[] commandArgsPair) {
@@ -114,12 +114,11 @@ public class Parser {
     }
 
     /**
-     * Further splits the parsed user input for the add <code>Deadline</code> command.
+     * Further splits the parsed user input for the add <code>Deadline</code> command. Returns a <code>String</code>
+     * array with the <code>Deadline</code> description in the first element and the deadline in the second element.
      *
      * @param commandArgsPair <code>String</code> array with the command in the first element and potentially an
      *                        argument in the second element.
-     * @return A <code>String</code> array with the <code>Deadline</code> description in the first element and the
-     * deadline in the second element.
      * @throws InvalidCommandException If no command was provided.
      * @throws EmptyDateException      If no <code>by</code> argument was provided.
      */
@@ -140,7 +139,7 @@ public class Parser {
      * Adds a new <code>Deadline</code> to the <code>Task</code> list based on the parsed user input.
      *
      * @param taskList        <code>TaskList</code> from Pat.
-     * @param commandArgsPair code>String</code> array with the command in the first element and potentially an
+     * @param commandArgsPair <code>String</code> array with the command in the first element and potentially an
      *                        argument in the second element.
      */
     private static void handleDeadline(TaskList taskList, String[] commandArgsPair) {
@@ -157,12 +156,12 @@ public class Parser {
     }
 
     /**
-     * Further splits the parsed user input for the add <code>Event</code> command.
+     * Further splits the parsed user input for the add <code>Event</code> command. Returns a <code>String</code> array
+     * with the <code>Event</code> description in the first element, the start time * in the second element, and the end
+     * time in the third element.
      *
      * @param commandArgsPair <code>String</code> array with the command in the first element and potentially an
      *                        argument in the second element.
-     * @return A <code>String</code> array with the <code>Event</code> description in the first element, the
-     * start time in the second element, and the end time in the third element.
      * @throws InvalidCommandException If no command was provided.
      * @throws EmptyDateException      If no <code>from</code> or <code>to</code> argument was provided.
      */
@@ -187,7 +186,7 @@ public class Parser {
      * Adds a new <code>Event</code> to the <code>Task</code> list based on the parsed user input.
      *
      * @param taskList        <code>TaskList</code> from Pat.
-     * @param commandArgsPair code>String</code> array with the command in the first element and potentially an
+     * @param commandArgsPair <code>String</code> array with the command in the first element and potentially an
      *                        argument in the second element.
      */
     private static void handleEvent(TaskList taskList, String[] commandArgsPair) {
@@ -224,7 +223,7 @@ public class Parser {
      * Marks <code>Task</code> with given task number as done.
      *
      * @param taskList        <code>TaskList</code> from Pat.
-     * @param commandArgsPair code>String</code> array with the command in the first element and potentially an
+     * @param commandArgsPair <code>String</code> array with the command in the first element and potentially an
      *                        argument in the second element.
      */
     private static void markTask(TaskList taskList, String[] commandArgsPair) {
@@ -253,7 +252,7 @@ public class Parser {
      * Unmarks <code>Task</code> with given task number as not done.
      *
      * @param taskList        <code>TaskList</code> from Pat.
-     * @param commandArgsPair code>String</code> array with the command in the first element and potentially an
+     * @param commandArgsPair <code>String</code> array with the command in the first element and potentially an
      *                        argument in the second element.
      */
     private static void unmarkTask(TaskList taskList, String[] commandArgsPair) {
@@ -282,7 +281,7 @@ public class Parser {
      * Deletes <code>Task</code> with given task number.
      *
      * @param taskList        <code>TaskList</code> from Pat.
-     * @param commandArgsPair code>String</code> array with the command in the first element and potentially an
+     * @param commandArgsPair <code>String</code> array with the command in the first element and potentially an
      *                        argument in the second element.
      */
     private static void deleteTask(TaskList taskList, String[] commandArgsPair) {
@@ -319,7 +318,7 @@ public class Parser {
      * Finds all <code>Task</code> that contain the given keyword from user input.
      *
      * @param taskList        <code>TaskList</code> from Pat.
-     * @param commandArgsPair code>String</code> array with the command in the first element and potentially an
+     * @param commandArgsPair <code>String</code> array with the command in the first element and potentially an
      *                        argument in the second element.
      */
     private static void findTask(TaskList taskList, String[] commandArgsPair) {
